@@ -79,7 +79,8 @@ namespace Trash_Collector.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    //return RedirectToLocal(returnUrl);
+                    return RedirectToAction("GoToDetails");
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -89,6 +90,13 @@ namespace Trash_Collector.Controllers
                     ModelState.AddModelError("", "Invalid login attempt.");
                     return View(model);
             }
+        }
+        public ActionResult GoToDetails()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var UserId = User.Identity.GetUserId();
+            return RedirectToAction("Details", "Customers", new { id = db.Customers.Include("ApplicationUsers").Where(x => x.ApplicationUsers.Id == UserId).First().Id });
+
         }
 
         //
@@ -156,14 +164,15 @@ namespace Trash_Collector.Controllers
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    //return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Create", "Customers");
                 }
                 AddErrors(result);
             }
@@ -333,7 +342,8 @@ namespace Trash_Collector.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    //return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Create", "Customers");
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:

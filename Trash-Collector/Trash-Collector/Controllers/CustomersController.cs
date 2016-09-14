@@ -17,7 +17,8 @@ namespace Trash_Collector.Controllers
         // GET: Customers
         public ActionResult Index()
         {
-            return View(db.Customers.ToList());
+            var customers = db.Customers.Include(c => c.ApplicationUsers);
+            return View(customers.ToList());
         }
 
         // GET: Customers/Details/5
@@ -38,7 +39,9 @@ namespace Trash_Collector.Controllers
         // GET: Customers/Create
         public ActionResult Create()
         {
+            ViewBag.Email = new SelectList(db.Users, "Id", "Email");
             return View();
+
         }
 
         // POST: Customers/Create
@@ -46,7 +49,7 @@ namespace Trash_Collector.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,FirstName,LastName,StreetAddress,City,state,ZipCode,PickUpDay,Email_Id,password")] Customer customer)
+        public ActionResult Create([Bind(Include = "Id,FirstName,LastName,StreetAddress,City,state,ZipCode,PickUpDay,Email")] Customer customer)
         {
             List<Calender> calendar = new List<Calender>();
             //DateTime PickUpDay = default(DateTime);
@@ -61,8 +64,10 @@ namespace Trash_Collector.Controllers
                 db.Customers.Add(customer);
                 db.SaveChanges();
                 return RedirectToAction("Index");
+               
             }
 
+            ViewBag.Email = new SelectList(db.Users, "Id", "Email", customer.Email);
             return View(customer);
         }
 
@@ -72,12 +77,11 @@ namespace Trash_Collector.Controllers
             pickupScheduleList.Add(pickupSchedule);
             for (int i = 0; i < 52; i++)
             {
-                pickupSchedule=pickupSchedule.AddDays(7);
+                pickupSchedule = pickupSchedule.AddDays(7);
                 pickupScheduleList.Add(pickupSchedule);
             }
             return pickupScheduleList;
         }
-
         // GET: Customers/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -90,6 +94,7 @@ namespace Trash_Collector.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.Email = new SelectList(db.Users, "Id", "Email", customer.Email);
             return View(customer);
         }
 
@@ -98,7 +103,7 @@ namespace Trash_Collector.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,StreetAddress,City,state,ZipCode,PickUpDay,Email_Id,password")] Customer customer)
+        public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,StreetAddress,City,state,ZipCode,PickUpDay,Email")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -106,6 +111,7 @@ namespace Trash_Collector.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.Email = new SelectList(db.Users, "Id", "Email", customer.Email);
             return View(customer);
         }
 

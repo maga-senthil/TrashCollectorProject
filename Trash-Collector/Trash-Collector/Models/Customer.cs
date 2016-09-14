@@ -21,14 +21,15 @@ namespace Trash_Collector.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime PickUpDay { get; set; }
-        public string Email_Id { get; set; }
-        public string password { get; set; }
+       
+        //public string password { get; set; }
 
         public virtual ICollection <Calender> PickUpDates { get; set; }
 
-        //[ForeignKey("ApplicationUsers")]
-        //public string  Register_Id { get; set; }
-        //public ApplicationUser  ApplicationUsers { get; set; }
-
+        [ForeignKey("ApplicationUsers")]
+        //public string Register_Id { get; set; }
+        public string Email { get; set; }
+        public ApplicationUser ApplicationUsers { get; set; }
+      
     }
 }
