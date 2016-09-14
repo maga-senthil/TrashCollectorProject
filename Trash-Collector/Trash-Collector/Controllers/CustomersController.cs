@@ -49,7 +49,6 @@ namespace Trash_Collector.Controllers
         public ActionResult Create([Bind(Include = "Id,FirstName,LastName,StreetAddress,City,state,ZipCode,PickUpDay,Email_Id,password")] Customer customer)
         {
             List<Calender> calendar = new List<Calender>();
-            //DateTime PickUpDay = default(DateTime);
             foreach (DateTime day in GeneratePickupSchedule(customer.PickUpDay))
             {
                 calendar.Add(new Calender() { Days = day });
@@ -72,7 +71,7 @@ namespace Trash_Collector.Controllers
             pickupScheduleList.Add(pickupSchedule);
             for (int i = 0; i < 52; i++)
             {
-                pickupSchedule=pickupSchedule.AddDays(7);
+                pickupSchedule = pickupSchedule.AddDays(7);
                 pickupScheduleList.Add(pickupSchedule);
             }
             return pickupScheduleList;
