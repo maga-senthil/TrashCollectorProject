@@ -52,7 +52,6 @@ namespace Trash_Collector.Controllers
         public ActionResult Create([Bind(Include = "Id,FirstName,LastName,StreetAddress,City,state,ZipCode,PickUpDay,Email")] Customer customer)
         {
             List<Calender> calendar = new List<Calender>();
-            //DateTime PickUpDay = default(DateTime);
             foreach (DateTime day in GeneratePickupSchedule(customer.PickUpDay))
             {
                 calendar.Add(new Calender() { Days = day });
